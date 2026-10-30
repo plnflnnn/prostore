@@ -3,6 +3,9 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
 	/* config options here */
 	allowedDevOrigins: ["192.168.219.103"],
+	outputFileTracingIncludes: {
+		"/*": ["./lib/generated/prisma/**/*"],
+	},
 	experimental: {
 		agentFeedback: true,
 	},

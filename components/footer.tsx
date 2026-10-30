@@ -1,8 +1,12 @@
-"use cache";
 import { APP_NAME } from "@/lib/constants";
 
+async function getCurrentYear() {
+	"use cache";
+	return new Date().getFullYear();
+}
+
 const Footer = async () => {
-	const currentYear = await new Date().getFullYear();
+	const currentYear = await getCurrentYear();
 
 	return (
 		<footer className="w-full border-t">
