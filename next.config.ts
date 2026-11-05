@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
 	/* config options here */
 	allowedDevOrigins: ["192.168.219.103"],
+	serverExternalPackages: ["@prisma/client", "@prisma/adapter-neon"],
 	outputFileTracingIncludes: {
 		"/*": ["./lib/generated/prisma/**/*"],
 	},

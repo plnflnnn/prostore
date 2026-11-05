@@ -1,8 +1,19 @@
+import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import ModeToggle from "./mode-toggle";
 import Link from "next/link";
 import { EllipsisVertical, ShoppingCart, UserIcon } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import UserButton from "./user-button";
+
+const UserButtonFallback = () => (
+  <Button>
+    <Link className="text-sm flex flex-center flex-row gap-2" href="/sign-in">
+      <UserIcon className="w-5 h-5" />
+      Sign In
+    </Link>
+  </Button>
+);
 
 const Menu = () => {
   return (
@@ -18,15 +29,9 @@ const Menu = () => {
                     Cart
                 </Link>
             </Button>
-            <Button>
-                <Link
-                    href="/sign-in"
-                    className="text-sm flex flex-center flex-row gap-2"
-                >
-                    <UserIcon className="w-5 h-5" />
-                    Sign In
-                </Link>
-            </Button>
+            <Suspense fallback={<UserButtonFallback />}>
+              <UserButton/>
+            </Suspense>
         </nav>
         <nav className="md:hidden">
             <Sheet>
@@ -39,17 +44,12 @@ const Menu = () => {
                     <Button variant="ghost">
                         <Link className="text-sm flex flex-center flex-row gap-2"
                             href="/cart">
-                            <ShoppingCart /> Cart  
+                            <ShoppingCart /> Cart
                         </Link>
                     </Button>
-                    <Button>
-                        <Link className="text-sm flex flex-center flex-row gap-2"
-                            href="/sign-in"
-                        >
-                            <UserIcon className="w-5 h-5" /> 
-                            Sign In
-                        </Link>
-                    </Button>
+                    <Suspense fallback={<UserButtonFallback />}>
+                      <UserButton/>
+                    </Suspense>
                 </SheetContent>
             </Sheet>
         </nav>

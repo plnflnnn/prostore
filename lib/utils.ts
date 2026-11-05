@@ -11,3 +11,43 @@ export function formatNumberWithDecimal(num: number): string {
     const [int, decimal] = num.toString().split('.');
     return decimal ? `${int}.${decimal.padEnd(2, '0')}` : `${int}.00`;
 }
+
+function uniqueFieldLabel(target: unknown): string {
+    const raw = Array.isArray(target) ? target.join('_') : String(target ?? 'Field');
+
+    if (/email/i.test(raw)) {
+        return 'Email';
+    }
+
+    const field = raw.replace(/(_idx|_key)$/i, '').split('_').pop() || 'Field';
+    return field.charAt(0).toUpperCase() + field.slice(1);
+}
+
+// Format errors
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function formatErrors(error: any): string {
+    if (error.name === 'ZodError') {
+        // Course: Object.keys(error.errors).map(field => error.errors[field].message)
+        // Zod 3 `errors` was the issues array. Zod 4 dropped it; use flatten() for the same field messages.
+        if (typeof error.flatten === 'function') {
+            const { fieldErrors, formErrors } = error.flatten();
+            const formattedFieldErrors = Object.keys(fieldErrors).map((field) => {
+                const value = fieldErrors[field];
+                return Array.isArray(value) ? value.join('. ') : value?.message ?? value;
+            });
+
+            return [...(formErrors ?? []), ...formattedFieldErrors].filter(Boolean).join('. ');
+        }
+
+        const issues = error.issues ?? error.errors ?? [];
+        return issues.map((issue: { message: string }) => issue.message).join('. ');
+    } else if (
+        (error.name === 'PrismaClientKnownRequestError' || error.code === 'P2002') &&
+        error.code === 'P2002'
+    ) {
+        const field = uniqueFieldLabel(error.meta?.target ?? error.meta?.constraint);
+        return `${field} already exists`;
+    } else {
+        return typeof error.message === 'string' ? error.message : JSON.stringify(error.message);
+    }
+}
