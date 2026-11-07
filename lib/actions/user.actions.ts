@@ -8,6 +8,9 @@ import { prisma } from "@/db/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { formatErrors } from "../utils";
+import { ShippingAddress } from "@/types";
+import { auth } from "@/auth";
+import { shippingAddressSchema } from "../validators";
 
 // Sign in the user with credentials
 export async function signInWithCredentials(prevState: unknown, formData: FormData) {
@@ -67,4 +70,42 @@ export async function signUpUser(prevState: unknown, formData: FormData) {
         return {success: false, message: formatErrors(error)};
     }
 
+}
+
+//Get user by the ID
+export async function getUserById(userId: string) {
+    const user = await prisma.user.findFirst({
+        where: { id: userId },
+    });
+    if(!user) {
+        throw new Error('User not found');
+    }
+    return user;
+};
+
+//Update user shipping address
+export async function updateUserShippingAddress(data: ShippingAddress) {
+    try{
+        const session = await auth();
+        const currentUser = await prisma.user.findFirst({
+            where: { id: session?.user?.id },
+        });
+        if(!currentUser) {
+            throw new Error('User not found');
+        }
+        const userId = currentUser.id;
+
+        const address = shippingAddressSchema.parse(data);
+
+        await prisma.user.update({
+            where: { id: userId },
+            data: { address },
+        });
+        return {success: true, message: 'Shipping address updated successfully'};
+    } catch(error) {
+        if(isRedirectError(error)) {
+            throw error;
+        }
+        return {success: false, message: formatErrors(error)};
+    }
 }

@@ -30,4 +30,35 @@ export const signUpFormSchema = z.object({
 }).refine((data) => data.password === data.confirmPassword, {
     message: `Passwords don't match`,
     path: ['confirmPassword'],
+});
+
+//Cart Schemas
+export const cartItemSchema = z.object({
+    productId: z.string().min(1, 'Product ID is required'),
+    name: z.string().min(1, 'Name is required'),
+    slug: z.string().min(1, 'Slug is required'),
+    image: z.string().min(1, 'Image is required'),
+    price: currency,
+    quantity: z.number().min(1, 'Quantity must be at least 1'),
+});
+
+export const insertCartSchema = z.object({
+    items: z.array(cartItemSchema),
+    itemsPrice: currency,
+    totalPrice: currency,
+    shippingPrice: currency,
+    taxPrice: currency,
+    sessionCartId: z.string().min(1, 'Session cart ID is required'),
+    userId: z.string().optional().nullable(),
+});
+
+// Schema for the shipping address
+export const shippingAddressSchema = z.object({
+    fullName: z.string().min(3, 'Name must be at least 3 characters long'),
+    streetAddress: z.string().min(3, 'Address must be at least 3 characters long'),
+    city: z.string().min(3, 'City is required'),
+    postalCode: z.string().min(3, 'Postal code is required'),
+    country: z.string().min(3, 'Country must be at least 3 characters long'),
+    lat: z.number().optional(),
+    lng: z.number().optional(),
 })

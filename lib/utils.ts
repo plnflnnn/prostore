@@ -51,3 +51,30 @@ export function formatErrors(error: any): string {
         return typeof error.message === 'string' ? error.message : JSON.stringify(error.message);
     }
 }
+
+// Round number to 2 decimal places
+export function round2(value: number | string) {
+    if(typeof value === 'string') {
+        return Math.round((Number(value) + Number.EPSILON) * 100) / 100;
+    } else if (typeof value === 'number') {
+        return Math.round((value + Number.EPSILON) * 100) / 100;
+    } else {
+        throw new Error('Invalid value');
+    }
+}
+
+const CURRENCY_FORMATTER = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+});
+
+export function formatCurrency(ammount: number | string | null) {
+    if(typeof ammount === 'number') {
+        return CURRENCY_FORMATTER.format(ammount);
+    } else if(typeof ammount === 'string') {
+        return CURRENCY_FORMATTER.format(Number(ammount));
+    } else {
+        return 'NaN';
+    }
+};

@@ -1,18 +1,21 @@
 import { Suspense } from "react";
 import { getProductBySlug } from "@/lib/actions/product.actions";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import NotFound from "@/app/not-found";
 import ProductPrice from "@/components/shared/product/product-price";
 import ProductImages from "@/components/shared/product/product-images";
 import Loading from "@/app/loading";
+import AddToCart from "@/components/shared/product/add-to-cart";
+import { getMyCart } from "@/lib/actions/cart.action";
 
 async function ProductDetails({ slug }: { slug: string }) {
 	const product = await getProductBySlug(slug);
 	if (!product) {
 		return <NotFound />;
 	}
+
+	const cart = await getMyCart();
 
 	return (
 		<section>
@@ -59,7 +62,17 @@ async function ProductDetails({ slug }: { slug: string }) {
 								)}
 							</div>
 							{product.stock > 0 && (
-								<Button className="w-full">Add to Cart</Button>
+								<AddToCart
+									cart={cart}
+									item={{
+										productId: product.id,
+										name: product.name,
+										slug: product.slug,
+										image: product.images[0],
+										price: product.price,
+										quantity: 1,
+									}}
+								/>
 							)}
 						</CardContent>
 					</Card>
