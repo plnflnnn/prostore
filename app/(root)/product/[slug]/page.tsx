@@ -9,7 +9,8 @@ import Loading from "@/app/loading";
 import AddToCart from "@/components/shared/product/add-to-cart";
 import { getMyCart } from "@/lib/actions/cart.actions";
 
-async function ProductDetails({ slug }: { slug: string }) {
+async function ProductDetails({ params }: { params: Promise<{ slug: string }>}) {
+	const { slug } = await params;
 	const product = await getProductBySlug(slug);
 	if (!product) {
 		return <NotFound />;
@@ -82,14 +83,12 @@ async function ProductDetails({ slug }: { slug: string }) {
 	);
 }
 
-const ProductDetailsPage = async (props: {
+const ProductDetailsPage = (props: {
 	params: Promise<{ slug: string }>;
 }) => {
-	const { slug } = await props.params;
-
 	return (
 		<Suspense fallback={<Loading />}>
-			<ProductDetails slug={slug} />
+			<ProductDetails params={props.params} />
 		</Suspense>
 	);
 };
