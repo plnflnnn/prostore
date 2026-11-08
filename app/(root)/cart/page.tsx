@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { Metadata } from "next";
 import CartTable from "./cart-table";
-import { getMyCart } from "@/lib/actions/cart.action";
+import { getMyCart } from "@/lib/actions/cart.actions";
 import Loading from "@/app/loading";
 
 export const metadata: Metadata = {

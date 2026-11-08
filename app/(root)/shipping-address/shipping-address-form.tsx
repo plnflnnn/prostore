@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader, ArrowRight } from "lucide-react";
 import { updateUserShippingAddress } from '@/lib/actions/user.actions';
-import { Controller, useForm, SubmitHandler } from "react-hook-form"
+import { Controller, useForm } from "react-hook-form";
 
 const ShippingAddressForm = ({address}: {address: ShippingAddress}) => {
 

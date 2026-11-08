@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { Plus, Minus, Loader } from 'lucide-react';
 import { CartItem, Cart } from '@/types';
 import { toast } from '@/components/ui/toast';
-import { addItemToCart, removeItemFromCart } from '@/lib/actions/cart.action';
+import { addItemToCart, removeItemFromCart } from '@/lib/actions/cart.actions';
 import { useTransition } from 'react';
 
 const AddToCart = ({ cart, item }: {cart?: Cart, item: CartItem}) => {

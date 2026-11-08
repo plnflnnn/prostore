@@ -7,7 +7,7 @@ import ProductPrice from "@/components/shared/product/product-price";
 import ProductImages from "@/components/shared/product/product-images";
 import Loading from "@/app/loading";
 import AddToCart from "@/components/shared/product/add-to-cart";
-import { getMyCart } from "@/lib/actions/cart.action";
+import { getMyCart } from "@/lib/actions/cart.actions";
 
 async function ProductDetails({ slug }: { slug: string }) {
 	const product = await getProductBySlug(slug);

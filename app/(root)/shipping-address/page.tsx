@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
-import { getMyCart } from '@/lib/actions/cart.action';
+import { getMyCart } from '@/lib/actions/cart.actions';
 import { ShippingAddress } from '@/types';
 import { Metadata } from 'next';
 import { getUserById } from '@/lib/actions/user.actions';

@@ -78,3 +78,39 @@ export function formatCurrency(ammount: number | string | null) {
         return 'NaN';
     }
 };
+
+//Shorten UUID
+export function formatId(id: string) {
+    return `..${id.substring(id.length - 6)}`;
+};
+
+//Format date and time
+export function formatDateAndTime(date: Date) {
+    const dateTimeOptions: Intl.DateTimeFormatOptions = {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true,
+    };
+    const dateOptions: Intl.DateTimeFormatOptions = {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        weekday: 'short',
+    };
+    const timeOptions: Intl.DateTimeFormatOptions = {
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true,
+    };
+    const formattedDateTime: string = new Date(date).toLocaleString('en-US', dateTimeOptions);
+    const formattedDate: string = new Date(date).toLocaleDateString('en-US', dateOptions);
+    const formattedTime: string = new Date(date).toLocaleTimeString('en-US', timeOptions);
+    return {
+        dateTime: formattedDateTime,
+        dateOnly: formattedDate,
+        timeOnly: formattedTime,
+    };
+};

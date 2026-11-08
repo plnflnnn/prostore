@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { formatNumberWithDecimal } from "./utils";
+import { PAYMENT_METHODS } from "./constants";
 
 const currency = z.string().refine((value) => /^\d+(\.\d{2})?$/.test(formatNumberWithDecimal(Number(value))), 'Price must have exactly two decimal places');
 
@@ -13,8 +14,6 @@ export const insertProductSchema = z.object({
     images: z.array(z.string()).min(1, 'At least one image is required'),
     isFeatured: z.boolean().default(false),
     banner: z.string().nullable(),
-    //numReviews: z.coerce.number().default(0),
-    //rating: z.coerce.number().default(0),
 });
 
 export const signInFormSchema = z.object({
@@ -61,4 +60,42 @@ export const shippingAddressSchema = z.object({
     country: z.string().min(3, 'Country must be at least 3 characters long'),
     lat: z.number().optional(),
     lng: z.number().optional(),
-})
+});
+
+// Schema for the payment method
+export const paymentMethodSchema = z.object({
+    type: z.string().min(1, 'Payment method is required'),
+}).refine((data) => PAYMENT_METHODS.includes(data.type), {
+    path: ['type'],
+    message: 'Invalid payment method',
+});
+
+// Schema for inserting an order
+export const insertOrderSchema = z.object({
+    userId: z.string().min(1, 'User ID is required'),
+    shippingAddress: shippingAddressSchema,
+    itemsPrice: currency,
+    shippingPrice: currency,
+    taxPrice: currency,
+    totalPrice: currency,
+    paymentMethod: z.string().refine((data) => PAYMENT_METHODS.includes(data), {
+        message: 'Invalid payment method',
+    }),
+});
+
+// Schema for inserting an order item
+export const insertOrderItemSchema = z.object({
+    slug: z.string(),
+    productId: z.string(),
+    name: z.string(),
+    quantity: z.number(),
+    image: z.string(),
+    price: currency,
+});
+
+export const paymentResultSchema = z.object({
+    id: z.string(),
+    status: z.string(),
+    pricePaid: z.string(),
+    email_address: z.string(),
+});
