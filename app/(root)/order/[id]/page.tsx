@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import Loading from "@/app/loading";
 import OrderDetailaTable from "./order-details-table";
+import { auth } from "@/auth";
 
 export const metadata: Metadata = {
   title: 'Order Details',
@@ -15,10 +16,11 @@ async function OrderInfo({ params }: { params: Promise<{ id: string }> }) {
     if(!order) {
         notFound();
     }
+    const session = await auth();
     const paypalClientId = process.env.PAYPAL_CLIENT_ID || 'sb';
 
     return (
-        <OrderDetailaTable order={order} paypalClientId={paypalClientId}/>
+        <OrderDetailaTable order={order} paypalClientId={paypalClientId} isAdmin={session?.user?.role === 'admin' || false}/>
     )
 }
 

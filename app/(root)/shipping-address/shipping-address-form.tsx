@@ -46,7 +46,6 @@ const ShippingAddressForm = ({address}: {address: ShippingAddress}) => {
         <p className="text-sm text-muted-foreground">
             Please enter your shipping address below.
         </p>
-
             <form method='post' className='space-y-4' onSubmit={form.handleSubmit(onSubmit)}>
                 <div className="flex flex-col md:flex-row gap-3">
                     <FieldGroup>
@@ -55,19 +54,19 @@ const ShippingAddressForm = ({address}: {address: ShippingAddress}) => {
                         control={form.control}
                         render={({ field, fieldState }) => (
                             <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel htmlFor="form-rhf-demo-title">
-                                Full Name
-                            </FieldLabel>
-                            <Input
-                                {...field}
-                                id="form-rhf-demo-title"
-                                aria-invalid={fieldState.invalid}
-                                placeholder="Enter your full name"
-                                autoComplete="off"
-                            />
-                            {fieldState.invalid && (
-                                <FieldError errors={[fieldState.error]} />
-                            )}
+                                <FieldLabel htmlFor="form-rhf-demo-title">
+                                    Full Name
+                                </FieldLabel>
+                                <Input
+                                    {...field}
+                                    id="form-rhf-demo-title"
+                                    aria-invalid={fieldState.invalid}
+                                    placeholder="Enter your full name"
+                                    autoComplete="off"
+                                />
+                                {fieldState.invalid && (
+                                    <FieldError errors={[fieldState.error]} />
+                                )}
                             </Field>
                         )}
                         />
@@ -76,19 +75,19 @@ const ShippingAddressForm = ({address}: {address: ShippingAddress}) => {
                         control={form.control}
                         render={({ field, fieldState }) => (
                             <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel htmlFor="form-rhf-demo-title">
-                                Street Address
-                            </FieldLabel>
-                            <Input
-                                {...field}
-                                id="form-rhf-demo-title"
-                                aria-invalid={fieldState.invalid}
-                                placeholder="Enter your street address"
-                                autoComplete="off"
-                            />
-                            {fieldState.invalid && (
-                                <FieldError errors={[fieldState.error]} />
-                            )}
+                                <FieldLabel htmlFor="form-rhf-demo-title">
+                                    Street Address
+                                </FieldLabel>
+                                <Input
+                                    {...field}
+                                    id="form-rhf-demo-title"
+                                    aria-invalid={fieldState.invalid}
+                                    placeholder="Enter your street address"
+                                    autoComplete="off"
+                                />
+                                {fieldState.invalid && (
+                                    <FieldError errors={[fieldState.error]} />
+                                )}
                             </Field>
                         )}
                         />
@@ -97,19 +96,19 @@ const ShippingAddressForm = ({address}: {address: ShippingAddress}) => {
                         control={form.control}
                         render={({ field, fieldState }) => (
                             <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel htmlFor="form-rhf-demo-title">
-                                City
-                            </FieldLabel>
-                            <Input
-                                {...field}
-                                id="form-rhf-demo-title"
-                                aria-invalid={fieldState.invalid}
-                                placeholder="Enter your city"
-                                autoComplete="off"
-                            />
-                            {fieldState.invalid && (
-                                <FieldError errors={[fieldState.error]} />
-                            )}
+                                <FieldLabel htmlFor="form-rhf-demo-title">
+                                    City
+                                </FieldLabel>
+                                <Input
+                                    {...field}
+                                    id="form-rhf-demo-title"
+                                    aria-invalid={fieldState.invalid}
+                                    placeholder="Enter your city"
+                                    autoComplete="off"
+                                />
+                                {fieldState.invalid && (
+                                    <FieldError errors={[fieldState.error]} />
+                                )}
                             </Field>
                         )}
                         />
@@ -118,27 +117,27 @@ const ShippingAddressForm = ({address}: {address: ShippingAddress}) => {
                             control={form.control}
                             render={({ field, fieldState }) => (
                                 <Field data-invalid={fieldState.invalid}>
-                                <FieldLabel htmlFor="form-rhf-demo-title">
-                                    Postal Code
-                                </FieldLabel>
-                                <Input
-                                    {...field}
-                                    id="form-rhf-demo-title"
-                                    aria-invalid={fieldState.invalid}
-                                    placeholder="Enter your postal code"
-                                    autoComplete="off"
-                                />
-                                {fieldState.invalid && (
-                                    <FieldError errors={[fieldState.error]} />
-                                )}
+                                    <FieldLabel htmlFor="form-rhf-demo-title">
+                                        Postal Code
+                                    </FieldLabel>
+                                    <Input
+                                        {...field}
+                                        id="form-rhf-demo-title"
+                                        aria-invalid={fieldState.invalid}
+                                        placeholder="Enter your postal code"
+                                        autoComplete="off"
+                                    />
+                                    {fieldState.invalid && (
+                                        <FieldError errors={[fieldState.error]} />
+                                    )}
                                 </Field>
                             )}
-                            />
-                            <Controller
-                            name="country"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
+                        />
+                        <Controller
+                        name="country"
+                        control={form.control}
+                        render={({ field, fieldState }) => (
+                            <Field data-invalid={fieldState.invalid}>
                                 <FieldLabel htmlFor="form-rhf-demo-title">
                                     Country
                                 </FieldLabel>
@@ -152,9 +151,9 @@ const ShippingAddressForm = ({address}: {address: ShippingAddress}) => {
                                 {fieldState.invalid && (
                                     <FieldError errors={[fieldState.error]} />
                                 )}
-                                </Field>
-                            )}
-                            />
+                            </Field>
+                        )}
+                        />
                     </FieldGroup>
                 </div>
                 <div className="flex gap-2">

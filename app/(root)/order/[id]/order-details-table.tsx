@@ -13,12 +13,19 @@ import {
     INSTANCE_LOADING_STATE,
     type OnApproveDataOneTimePayments,
 } from "@paypal/react-paypal-js/sdk-v6";
-import { createPaypalOrder, approvePaypalOrder } from "@/lib/actions/order.actions";
+import { createPaypalOrder, approvePaypalOrder, updateOrderToPaidCOD, deliverOrder } from "@/lib/actions/order.actions";
 import { toast } from "@/components/ui/toast";
+import { useTransition } from "react";
+import { Button } from "@/components/ui/button";
 
 
+type Props ={
+    order: Order,
+    paypalClientId: string,
+    isAdmin: boolean
+}
 
-const OrderDetailaTable = ({order, paypalClientId}: {order: Order, paypalClientId: string}) => {
+const OrderDetailaTable = ({order, paypalClientId, isAdmin}: Props) => {
 
     const {
         id,
@@ -51,6 +58,27 @@ const OrderDetailaTable = ({order, paypalClientId}: {order: Order, paypalClientI
         }
         toast.add({ type: "success", description: res.message });
     };
+
+    const [isPending, startTransition] = useTransition();
+
+    const handleDeliverOrder = async () => {
+        const res = await deliverOrder(id);
+        toast.add({
+            type: res.success ? "success" : "error",
+            description: res.message
+        });
+    };
+
+    const handleUpdateOrderToPaidCOD = () => {
+        startTransition(async () => {
+            const res = await updateOrderToPaidCOD(id);
+            toast.add({
+                type: res.success ? "success" : "error",
+                description: res.message
+            });
+        });
+    };
+
 
     return (
     <>
@@ -162,6 +190,22 @@ const OrderDetailaTable = ({order, paypalClientId}: {order: Order, paypalClientI
                                 </>
                             )}
 
+                            {isAdmin && !isPaid && paymentMethod === 'CashOnDelivery' && (
+                                <Button
+                                    type="button"
+                                    onClick={handleUpdateOrderToPaidCOD}
+                                    disabled={isPending}
+                                >
+                                    {isPending ? 'Processing...' : 'Mark as paid'}
+                                </Button>
+                            )}
+                            {isAdmin && !isDelivered && isPaid && (
+                                <Button type="button"
+                                onClick={handleDeliverOrder}
+                                disabled={isPending}>
+                                    {isPending ? 'Processing...' : 'Mark as delivered'}
+                                </Button>
+                            )}
                         </CardContent>
                     </Card>
                 </div>

@@ -13,12 +13,32 @@ const nextConfig: NextConfig = {
 	cacheComponents: true,
 	partialPrefetching: true,
 	turbopack: {
+		root: process.cwd(),
 		rules: {
 			"*.css": {
 				loaders: ["@tailwindcss/turbopack"],
 				as: "*.css",
 			},
 		},
+	},
+	images: {
+		remotePatterns: [
+		  {
+			protocol: 'https',
+			hostname: 'utfs.io',
+			pathname: '/**',
+		  },
+		  {
+			protocol: 'https',
+			hostname: 'ufs.sh',
+			pathname: '/**',
+		  },
+		  {
+			protocol: 'https',
+			hostname: '*.ufs.sh',
+			pathname: '/**',
+		  },
+		],
 	},
 };
 

@@ -9,7 +9,7 @@ const Loading = () => {
           alt="Loading..."
           width={150}
           height={150}
-          className="h-auto w-[150px]"
+          className="h-auto w-37.5"
         />
     </div>
   )

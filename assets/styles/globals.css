@@ -216,3 +216,13 @@
 	--sidebar-border: oklch(1 0 0 / 10%);
 	--sidebar-ring: oklch(0.556 0 0);
 }
+
+
+/* Uploadthing button text override */
+html.dark .upload-field .text-white {
+	color: #ffffff !important;
+}
+
+.upload-field .text-white {
+	color: #000000 !important;
+}

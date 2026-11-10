@@ -12,9 +12,14 @@ export const insertProductSchema = z.object({
     category: z.string().min(1, 'Category is required'),
     brand: z.string().min(1, 'Brand is required'),
     images: z.array(z.string()).min(1, 'At least one image is required'),
-    isFeatured: z.boolean().default(false),
+    stock: z.coerce.number<number>(),
+    isFeatured: z.boolean(),
     banner: z.string().nullable(),
 });
+
+export const updateProductSchema = insertProductSchema.extend({
+    id: z.string().min(1, 'Id is required'),
+  });
 
 export const signInFormSchema = z.object({
     email: z.string().email('Invalid email address'),
@@ -98,4 +103,10 @@ export const paymentResultSchema = z.object({
     status: z.string(),
     pricePaid: z.string(),
     email_address: z.string(),
+});
+
+//Schema for updating the user profile
+export const updateUserProfileSchema = z.object({
+    name: z.string().min(3, 'Name must be at least 3 characters long'),
+    email: z.string().min(3, 'Email must be at least 3 characters long'),
 });

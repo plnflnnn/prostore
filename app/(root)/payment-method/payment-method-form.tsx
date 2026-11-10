@@ -60,15 +60,15 @@ const PaymentMethodForm = ({ preferredPaymentMethod }: { preferredPaymentMethod:
                                 {PAYMENT_METHODS.map((method, index) => (
                                     <FieldLabel key={method} htmlFor={`form-rhf-radiogroup-${index}`}>
                                         <Field orientation="horizontal" data-invalid={fieldState.invalid}>
-                                        <FieldContent>
-                                            <FieldTitle>{method}</FieldTitle>
-                                        </FieldContent>
-                                        <RadioGroupItem
-                                            value={method}
-                                            id={`form-rhf-radiogroup-${index}`}
-                                            aria-invalid={fieldState.invalid}
-                                        />
-                                        </Field>
+                                            <FieldContent>
+                                                <FieldTitle>{method}</FieldTitle>
+                                            </FieldContent>
+                                            <RadioGroupItem
+                                                value={method}
+                                                id={`form-rhf-radiogroup-${index}`}
+                                                aria-invalid={fieldState.invalid}
+                                            />
+                                            </Field>
                                     </FieldLabel>
                                 ))}
                                 </RadioGroup>

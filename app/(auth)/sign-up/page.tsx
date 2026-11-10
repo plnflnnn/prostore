@@ -33,16 +33,12 @@ const SignUpCard = ({ children }: { children: React.ReactNode }) => (
     </div>
 );
 
-async function SignUpContent({
-    searchParams,
-}: {
-    searchParams: Promise<{callback: string}>
-}) {
-    const {callback} = await searchParams;
+async function SignUpContent({searchParams}: {searchParams: Promise<{ callbackUrl?: string }>}) {
+    const { callbackUrl } = await searchParams;
 
     const session = await auth();
     if (session) {
-        return redirect(callback || "/");
+        return redirect(callbackUrl || "/");
     }
 
     return (
@@ -52,9 +48,7 @@ async function SignUpContent({
     );
 }
 
-const SignUpPage = (props: {
-    searchParams: Promise<{callback: string}>
-}) => {
+const SignUpPage = (props: {searchParams: Promise<{ callbackUrl?: string }> }) => {
     return (
         <Suspense fallback={
             <SignUpCard>

@@ -1,6 +1,5 @@
 export { cn } from "cn";
 
-
 //Convert prisma object into a regular JS object
 export function convertToPlainObject<T>(value: unknown): T {
     return JSON.parse(JSON.stringify(value)) as T;
@@ -27,8 +26,6 @@ function uniqueFieldLabel(target: unknown): string {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function formatErrors(error: any): string {
     if (error.name === 'ZodError') {
-        // Course: Object.keys(error.errors).map(field => error.errors[field].message)
-        // Zod 3 `errors` was the issues array. Zod 4 dropped it; use flatten() for the same field messages.
         if (typeof error.flatten === 'function') {
             const { fieldErrors, formErrors } = error.flatten();
             const formattedFieldErrors = Object.keys(fieldErrors).map((field) => {
@@ -68,6 +65,14 @@ const CURRENCY_FORMATTER = new Intl.NumberFormat('en-US', {
     currency: 'USD',
     minimumFractionDigits: 2,
 });
+
+
+//Format Number
+const NUMBER_FORMATTER = new Intl.NumberFormat("en-US");
+
+export function formatNumber(value: number) {
+    return NUMBER_FORMATTER.format(value);
+}
 
 export function formatCurrency(ammount: number | string | null) {
     if(typeof ammount === 'number') {
@@ -113,4 +118,27 @@ export function formatDateAndTime(date: Date) {
         dateOnly: formattedDate,
         timeOnly: formattedTime,
     };
+};
+
+// Form the pagination links
+export function formUrlQuery({
+    params,
+    key,
+    value,
+    pathname,
+}: {
+    params: string;
+    key: string;
+    value: string | null;
+    pathname?: string;
+}) {
+    const searchParams = new URLSearchParams(params);
+    if (value === null) {
+        searchParams.delete(key);
+    } else {
+        searchParams.set(key, value);
+    }
+    const query = searchParams.toString();
+    const path = pathname ?? window.location.pathname;
+    return query ? `${path}?${query}` : path;
 };

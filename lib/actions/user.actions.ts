@@ -1,6 +1,6 @@
 'use server';
 
-import { signInFormSchema, signUpFormSchema, shippingAddressSchema, paymentMethodSchema } from "../validators";
+import { signInFormSchema, signUpFormSchema, shippingAddressSchema, paymentMethodSchema, updateUserProfileSchema } from "../validators";
 import { signIn, signOut, auth } from "@/auth";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { hashSync } from "bcrypt-ts-edge";
@@ -17,8 +17,13 @@ export async function signInWithCredentials(prevState: unknown, formData: FormDa
             email: formData.get('email'),
             password: formData.get('password'),
         });
+        const callbackUrl = (formData.get("callbackUrl") as string) || "/";
 
-        await signIn('credentials', user);
+        await signIn("credentials", {
+            email: user.email,
+            password: user.password,
+            redirectTo: callbackUrl,
+        });
 
         return {success: true, message: 'Signed in successfully'};
     } catch (e) {
@@ -55,9 +60,11 @@ export async function signUpUser(prevState: unknown, formData: FormData) {
                 password: hashedPassword,
             },
         });
-        await signIn('credentials', {
+        const callbackUrl = (formData.get("callbackUrl") as string) || "/";
+        await signIn("credentials", {
             email: user.email,
-            password: user.password
+            password: user.password,
+            redirectTo: callbackUrl,
         });
 
         return {success: true, message: 'Signed up successfully'};
@@ -133,3 +140,29 @@ export async function updateUserPaymentMethod(data: PaymentMethod) {
         return {success: false, message: formatErrors(error)};
     }
 };
+
+//Update user profile
+export async function updateProfile(user: { name: string, email: string}) {
+    try{
+        const session = await auth();
+        const currentUser = await prisma.user.findFirst({
+            where: { id: session?.user?.id },
+        });
+        if(!currentUser) {
+            throw new Error('User not found');
+        }
+        const userId = currentUser.id;
+        const userData = updateUserProfileSchema.parse(user);
+        await prisma.user.update({
+            where: { id: userId },
+            data: { name: userData.name, email: userData.email },
+        });
+        revalidatePath("/", "layout");
+        return {success: true, message: 'Profile updated successfully'};
+    } catch(error) {
+        if(isRedirectError(error)) {
+            throw error;
+        }
+        return {success: false, message: formatErrors(error)};
+    }
+}
