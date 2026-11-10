@@ -16,24 +16,17 @@ import { Suspense } from 'react';
 import Loading from '@/app/loading';
 
 
-const AdminProductsPageContent = async(props: {
-  searchParams: Promise<{
-    page: string;
-    query: string;
-    category: string;
-  }>;
-}) => {
+type Props = {
+  searchParams: Promise<{page: string, query: string, category: string}>
+}
 
-  const searchParams = await props.searchParams;
-
-  const page = Number(searchParams.page) || 1;
-  const searchText = searchParams.query || '';
-  const category = searchParams.category || '';
+const AdminProductsPageContent = async({searchParams}: Props) => {
+  const { page, query: searchText, category } = await searchParams;
 
   const products = await getAllProducts({
-    query: searchText,
-    page,
-    category,
+    query: searchText || '',
+    page: Number(page) || 1,
+    category: category || '',
   });
 
   return (
@@ -98,18 +91,12 @@ const AdminProductsPageContent = async(props: {
 
 }
 
-const AdminProductsPage = async ({searchParams}: {
-  searchParams: Promise<{
-    page: string;
-    query: string;
-    category: string;
-  }>;
-}) => {
+const AdminProductsPage = async ({searchParams}: Props) => {
   return (
     <Suspense fallback={<Loading/>}>
       <AdminProductsPageContent searchParams={searchParams} />
     </Suspense>
-  )
+  ); 
 };
 
 export default AdminProductsPage;

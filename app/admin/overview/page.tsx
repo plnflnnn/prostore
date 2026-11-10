@@ -1,6 +1,5 @@
 import { auth } from "@/auth";
 import { Metadata } from "next";
-import { redirect } from "next/navigation";
 import { getOrderSummary } from "@/lib/actions/order.actions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BadgeDollarSign, Barcode, ShoppingBag, Users } from "lucide-react";

@@ -5,6 +5,7 @@ import { convertToPlainObject, formatErrors } from "../utils";
 import { auth } from "@/auth";
 import { getMyCart } from "./cart.actions";
 import { prisma } from "@/db/prisma";
+import type { Prisma } from "@/lib/generated/prisma/client";
 import { connection } from 'next/server';
 import { getUserById } from "./user.actions";
 import { insertOrderSchema } from "../validators";
@@ -291,22 +292,37 @@ export async function getOrderSummary() {
 };
 
 // Get all orders
-export async function getAllOrders({limit = PAGE_SIZE, page }: {limit?: number; page: number;}) {
+export async function getAllOrders({limit = PAGE_SIZE, page, query } : { limit?: number; page: number; query: string; }) {
+    await connection();
+    const queryFilter: Prisma.OrderWhereInput =
+      query && query !== 'all'
+        ? {
+            user: {
+              name: {
+                contains: query,
+                mode: 'insensitive',
+              } as Prisma.StringFilter,
+            },
+          }
+        : {};
 
     const data = await prisma.order.findMany({
+        where: {
+            ...queryFilter,
+        },
         orderBy: { createdAt: 'desc' },
         take: limit,
         skip: (page - 1) * limit,
         include: { user: { select: { name: true } } },
     });
 
-    const dataCount = await prisma.order.count();
-
-    return {
-        data,
-        totalPages: Math.ceil(dataCount / limit),
-    };
-};
+    const dataCount = await prisma.order.count({
+        where: {
+            ...queryFilter,
+        },
+    });
+    return { data: data, totalPages: Math.ceil(dataCount / limit) };
+}
 
 // Delete an order
 export async function deleteOrder(id: string) {
@@ -350,7 +366,7 @@ export async function deliverOrder(orderId: string) {
                 deliveredAt: new Date(),
             },
         });
-        
+
         revalidatePath(`/order/${orderId}`);
         return {success: true, message: 'Order has been marked delivered',};
     } catch (error) {

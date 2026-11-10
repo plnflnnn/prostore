@@ -14,13 +14,13 @@ import { useRouter } from 'next/navigation';
 
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 
-const ProfilePorm = () => {
+const ProfilePorm = ({ user }: { user: UserProfile }) => {
   const { data: session, update } = useSession();
   const form = useForm<z.infer<typeof updateUserProfileSchema>>({
     resolver: zodResolver(updateUserProfileSchema),
     defaultValues: {
-      name: session?.user?.name || '',
-      email: session?.user?.email || '',
+      name: user.name || '',
+      email: user.email || '',
     },
   });
 

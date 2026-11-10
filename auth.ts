@@ -87,8 +87,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }
       }
 
-      if (trigger === "update" && session?.user?.name) {
-        token.name = session.user.name;
+      if (trigger === "update" && session?.user) {
+        if (session.user.name) token.name = session.user.name;
+        if (session.user.role) token.role = session.user.role;
       }
 
       return token;

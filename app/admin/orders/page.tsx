@@ -15,22 +15,39 @@ export const metadata: Metadata = {
   title: "Admin Orders",
 };
 
-const AdminOrdersPageContent = async({searchParams}: {searchParams: Promise<{page: string}>}) => {
-    const { page } = await searchParams;
+type Props = {
+  searchParams: Promise<{page: string, query: string}>
+}
+
+const AdminOrdersPageContent = async({searchParams}: Props) => {
+    const { page, query:searchText } = await searchParams;
     const session = await auth();
     if(session?.user?.role !== 'admin') {
         throw new Error("User is not authorized");
     }
-    const { data, totalPages } = await getAllOrders({limit: PAGE_SIZE, page: Number(page) || 1});
+    const { data, totalPages } = await getAllOrders({limit: PAGE_SIZE, page: Number(page) || 1, query: searchText || ''});
     return(
-        <div className="space-y-2">
-        <h1 className="text-2xl font-bold">Orders</h1>
+      <div className='space-y-2'>
+        <div className='flex items-center gap-3'>
+          <h1 className='h2-bold'>Orders</h1>
+          {searchText && (
+            <div>
+              Filtered by <i>&quot;{searchText}&quot;</i>{' '}
+              <Link href='/admin/orders'>
+                <Button variant='outline' size='sm'>
+                  Remove Filter
+                </Button>
+              </Link>
+            </div>
+          )}
+        </div>
         <div className="">
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>ORDER ID</TableHead>
                 <TableHead>DATE</TableHead>
+                <TableHead>BYER</TableHead>
                 <TableHead>TOTAL</TableHead>
                 <TableHead>PAID</TableHead>
                 <TableHead>DELIVERED</TableHead>
@@ -42,6 +59,7 @@ const AdminOrdersPageContent = async({searchParams}: {searchParams: Promise<{pag
                 <TableRow key={order.id}>
                   <TableCell>{formatId(order.id)}</TableCell>
                   <TableCell>{formatDateAndTime(order.createdAt).dateTime}</TableCell>
+                  <TableCell>{order.user?.name}</TableCell>
                   <TableCell>{formatCurrency(order.totalPrice)}</TableCell>
                   <TableCell>{order.isPaid && order.paidAt ? formatDateAndTime(order.paidAt).dateTime : 'No'}</TableCell>
                   <TableCell>{order.isDelivered && order.deliveredAt ? formatDateAndTime(order.deliveredAt).dateTime : 'No'}</TableCell>
@@ -66,7 +84,7 @@ const AdminOrdersPageContent = async({searchParams}: {searchParams: Promise<{pag
     )
 }
 
-const AdminOrdersPage = ({searchParams}: {searchParams: Promise<{page: string}>}) => {
+const AdminOrdersPage = ({searchParams}: Props) => {
   return (
     <Suspense fallback={<Loading/>}>
       <AdminOrdersPageContent searchParams={searchParams} />
