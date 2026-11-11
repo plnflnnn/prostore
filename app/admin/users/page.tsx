@@ -55,7 +55,7 @@ const AdminUserPageContent = async (props: Props) => {
                 <TableHead>NAME</TableHead>
                 <TableHead>EMAIL</TableHead>
                 <TableHead>ROLE</TableHead>
-                <TableHead>ACTIONS</TableHead>
+                <TableHead className="text-center">ACTIONS</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -71,7 +71,7 @@ const AdminUserPageContent = async (props: Props) => {
                       <Badge variant='default'>Admin</Badge>
                     )}
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="flex flex-center">
                     <Button variant='outline' size='sm'>
                       <Link href={`/admin/users/${user.id}`}>Edit</Link>
                     </Button>

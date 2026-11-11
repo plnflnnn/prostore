@@ -26,6 +26,7 @@ model Product {
   createdAt   DateTime    @default(now()) @db.Timestamp(6)
   updatedAt   DateTime    @updatedAt @db.Timestamp(6)
   orderItems  OrderItem[]
+  reviews     Review[]
 }
 
 model User {
@@ -45,6 +46,7 @@ model User {
   authenticators Authenticator[]
   cart           Cart[]
   orders         Order[]
+  reviews        Review[]
 }
 
 model Account {
@@ -147,4 +149,17 @@ model OrderItem {
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@id([orderId, productId], map: "order_item_order_id_product_id_idx")
+}
+
+model Review {
+  id                 String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId             String   @db.Uuid
+  productId          String   @db.Uuid
+  rating             Int
+  title              String
+  description        String
+  isVerifiedPurchase Boolean  @default(true)
+  createdAt          DateTime @default(now()) @db.Timestamp(6)
+  product            Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

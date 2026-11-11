@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { insertProductSchema, insertCartSchema, cartItemSchema, shippingAddressSchema, paymentMethodSchema, insertOrderSchema, insertOrderItemSchema, paymentResultSchema, updateUserProfileSchema, updateUserSchema } from '@/lib/validators';
+import { insertProductSchema, insertCartSchema, cartItemSchema, shippingAddressSchema, paymentMethodSchema, insertOrderSchema, insertOrderItemSchema, paymentResultSchema, updateUserProfileSchema, updateUserSchema, updateProductSchema, insertReviewSchema } from '@/lib/validators';
 
 export type Product =  z.infer<typeof insertProductSchema> & {
     id: string;
@@ -9,6 +9,17 @@ export type Product =  z.infer<typeof insertProductSchema> & {
     updatedAt: Date;
     stock: number;
 };
+export type UpdateProductData = z.infer<typeof updateProductSchema>;
+export type InsertProductData = z.infer<typeof insertProductSchema>;
+export type GetAllProductsProps = {
+    query?: string;
+    limit?: number;
+    page: number;
+    category?: string;
+    price?: string;
+    rating?: string;
+    sort?: string;
+};
 
 export type CartItem = z.infer<typeof cartItemSchema>;
 export type Cart = z.infer<typeof insertCartSchema> & {
@@ -17,6 +28,7 @@ export type Cart = z.infer<typeof insertCartSchema> & {
 
 export type ShippingAddress = z.infer<typeof shippingAddressSchema>;
 export type PaymentMethod = z.infer<typeof paymentMethodSchema>;
+export type PaymentResult = z.infer<typeof paymentResultSchema>;
 
 export type OrderItem = z.infer<typeof insertOrderItemSchema>;
 export type Order = z.infer<typeof insertOrderSchema> & {
@@ -30,12 +42,9 @@ export type Order = z.infer<typeof insertOrderSchema> & {
     user: { name: string; email: string; };
 };
 
-export type PaymentResult = z.infer<typeof paymentResultSchema>;
-
 export type UserProfile = z.infer<typeof updateUserProfileSchema>;
+export type UpdateUserData = z.infer<typeof updateUserSchema>;
 
 export type SalesDataType = { month: string; totalSales: number }[];
 
-export type InsertProductData = z.infer<typeof insertProductSchema>;
-
-export type UpdateUserData = z.infer<typeof updateUserSchema>;
+export type Review = z.infer<typeof insertReviewSchema>;

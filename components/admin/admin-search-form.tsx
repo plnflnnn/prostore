@@ -22,7 +22,7 @@ const AdminSearch = () => {
         placeholder='Search...'
         name='query'
         defaultValue={query}
-        className='md:w-25 lg:w-75'
+        className='sm:w-25 md:w-45 lg:w-75'
       />
       <button className='sr-only' type='submit'>
         Search

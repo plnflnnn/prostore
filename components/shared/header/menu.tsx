@@ -5,6 +5,7 @@ import Link from "next/link";
 import { EllipsisVertical, ShoppingCart, UserIcon } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import UserButton from "./user-button";
+import Search from "./search";
 
 const UserButtonFallback = () => (
   <Button>

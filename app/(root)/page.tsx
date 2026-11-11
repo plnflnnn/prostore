@@ -1,17 +1,26 @@
 import { Suspense } from "react";
-import { getLatestProducts } from "@/lib/actions/product.actions";
+import { getLatestProducts, getFeaturedProducts } from "@/lib/actions/product.actions";
 import ProductList from "@/components/shared/product/product-list";
+import ProductCarousel from "@/components/shared/product/product-carousel";
+import ViewAllProductsButton from "@/components/view-products-button";
 import Loading from "@/app/loading";
 
-async function LatestProducts() {
+async function HomepageContent() {
 	const products = await getLatestProducts();
-	return <ProductList data={products} title="Newest Arrivals" />;
+	const featuredProducts = await getFeaturedProducts();
+	return (
+		<>
+			<ProductCarousel data={featuredProducts} />
+			<ProductList data={products} title="Newest Arrivals" />
+			<ViewAllProductsButton />
+		</>
+	);
 }
 
 const Homepage = () => {
 	return (
 		<Suspense fallback={<Loading />}>
-			<LatestProducts />
+			<HomepageContent />
 		</Suspense>
 	);
 };
