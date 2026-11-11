@@ -48,3 +48,8 @@ export type UpdateUserData = z.infer<typeof updateUserSchema>;
 export type SalesDataType = { month: string; totalSales: number }[];
 
 export type Review = z.infer<typeof insertReviewSchema>;
+export type ReviewProps = z.infer<typeof insertReviewSchema> & {
+    id: string;
+    createdAt: Date;
+    user?: { name: string };
+};

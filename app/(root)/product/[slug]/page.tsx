@@ -8,6 +8,11 @@ import ProductImages from "@/components/shared/product/product-images";
 import Loading from "@/app/loading";
 import AddToCart from "@/components/shared/product/add-to-cart";
 import { getMyCart } from "@/lib/actions/cart.actions";
+import ReviewList from "./reviews-list";
+import { auth } from "@/auth";
+import Rating from "@/components/shared/product/rating";
+import { getReviews } from "@/lib/actions/review.actions";
+import { ReviewProps } from "@/types";
 
 async function ProductDetails({ params }: { params: Promise<{ slug: string }>}) {
 	const { slug } = await params;
@@ -18,7 +23,12 @@ async function ProductDetails({ params }: { params: Promise<{ slug: string }>}) 
 
 	const cart = await getMyCart();
 
+	const session = await auth();
+	const userId = session?.user?.id;
+	const reviews = await getReviews({ productId: product.id });
+
 	return (
+		<>
 		<section>
 			<div className="grid grid-cols-1 md:grid-cols-5">
 				<div className="col-span-2">
@@ -30,9 +40,8 @@ async function ProductDetails({ params }: { params: Promise<{ slug: string }>}) 
 							{product.brand} {product.category}
 						</p>
 						<h1 className="h3-bold">{product.name}</h1>
-						<p>
-							{product.rating} of {product.numReviews} Reviews
-						</p>
+						<Rating value={Number(product.rating)} />
+						<p>{product.numReviews} reviews</p>
 						<div className="flex flex-col sm:flex-row sm:items-center gap-3">
 							<ProductPrice
 								value={Number(product.price)}
@@ -80,6 +89,16 @@ async function ProductDetails({ params }: { params: Promise<{ slug: string }>}) 
 				</div>
 			</div>
 		</section>
+		<section className="mt-10">
+			<h2 className="h2-bold mb-5">Customer Reviews</h2>
+			<ReviewList
+				userId={userId || ""}
+				productId={product.id}
+				productSlug={product.slug}
+				initialReviews={reviews.data as ReviewProps[]}
+			/>
+		</section>
+		</>
 	);
 }
 

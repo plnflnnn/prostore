@@ -36,7 +36,7 @@ export async function getProductById(productId: string) {
     const data = await prisma.product.findFirst({
       where: { id: productId },
     });
-    return convertToPlainObject(data);
+    return data ? convertToPlainObject<Product>(data) : null;
 }
 
 
@@ -96,7 +96,7 @@ export async function getAllProducts(props: GetAllProductsProps) {
     });
     const dataCount = await prisma.product.count({ where });
     return {
-        data: convertToPlainObject(data),
+        data: convertToPlainObject<Product[]>(data),
         totalPages: Math.ceil(dataCount / limit)
     };
 }
