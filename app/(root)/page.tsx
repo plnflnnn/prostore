@@ -4,24 +4,40 @@ import ProductList from "@/components/shared/product/product-list";
 import ProductCarousel from "@/components/shared/product/product-carousel";
 import ViewAllProductsButton from "@/components/view-products-button";
 import Loading from "@/app/loading";
+import IconBoxes from "@/components/icon-boxes";
+import DealCountdown from "@/components/deal-countdown";
+
+async function FeaturedProductCarousel() {
+	const featuredProducts = await getFeaturedProducts();
+	if (featuredProducts.length === 0) {
+		return null;
+	}
+	return <ProductCarousel data={featuredProducts} />;
+}
 
 async function HomepageContent() {
 	const products = await getLatestProducts();
-	const featuredProducts = await getFeaturedProducts();
+
 	return (
 		<>
-			<ProductCarousel data={featuredProducts} />
 			<ProductList data={products} title="Newest Arrivals" />
 			<ViewAllProductsButton />
+			<DealCountdown />
+			<IconBoxes />
 		</>
 	);
 }
 
 const Homepage = () => {
 	return (
-		<Suspense fallback={<Loading />}>
-			<HomepageContent />
-		</Suspense>
+		<>
+			<Suspense fallback={<Loading />}>
+				<FeaturedProductCarousel />
+			</Suspense>
+			<Suspense fallback={<Loading />}>
+				<HomepageContent />
+			</Suspense>
+		</>
 	);
 };
 

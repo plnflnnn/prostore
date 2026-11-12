@@ -26,3 +26,6 @@ export const reviewFormDefaultValues = {
 	productId: '',
 	userId: '',
 };
+
+export const SENDER_EMAIL = process.env.SENDER_EMAIL || 'onboarding@resend.dev';
+export const RESEND_API_KEY = process.env.RESEND_API_KEY;

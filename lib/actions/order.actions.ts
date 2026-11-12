@@ -13,6 +13,7 @@ import { Order, ShippingAddress, PaymentResult, SalesDataType } from "@/types";
 import { paypal } from "../paypal";
 import { revalidatePath } from "next/cache";
 import { PAGE_SIZE } from "../constants";
+import { sendPurchaseReceipt } from "@/lib/send-purchase-receipt";
 
 // Create an order and create the order items
 export async function createOrder() {
@@ -212,6 +213,14 @@ export async function updateOrderToPaid({orderId, paymentResult}: {orderId: stri
         },
     });
     if(!updatedOrder) throw new Error('Failed to update order');
+
+    sendPurchaseReceipt({
+        order: {
+          ...updatedOrder,
+          shippingAddress: updatedOrder.shippingAddress as ShippingAddress,
+          paymentResult: updatedOrder.paymentResult as PaymentResult,
+        },
+    });
 }
 
 //Get orders for user
