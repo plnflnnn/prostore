@@ -28,7 +28,6 @@ import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { createUpdateReview, getReviewByProductId } from "@/lib/actions/review.actions";
-import type { Review } from "@/types";
 
 type ReviewFormValues = z.infer<typeof insertReviewSchema>;
 

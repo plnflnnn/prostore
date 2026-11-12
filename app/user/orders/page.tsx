@@ -40,7 +40,7 @@ const OrdersPageContent = async (props: {searchParams: Promise<{page: string}>})
                 <TableCell>{order.isPaid && order.paidAt ? formatDateAndTime(order.paidAt).dateTime : 'No'}</TableCell>
                 <TableCell>{order.isDelivered && order.deliveredAt ? formatDateAndTime(order.deliveredAt).dateTime : 'No'}</TableCell>
                 <TableCell>
-                  <Link href={`/orders/${order.id}`} className="text-blue-500 hover:text-blue-700">Details</Link>
+                  <Link href={`/order/${order.id}`} className="text-blue-500 hover:text-blue-700">Details</Link>
                 </TableCell>
               </TableRow>
             ))}

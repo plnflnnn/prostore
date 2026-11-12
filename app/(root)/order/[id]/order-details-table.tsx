@@ -17,15 +17,17 @@ import { createPaypalOrder, approvePaypalOrder, updateOrderToPaidCOD, deliverOrd
 import { toast } from "@/components/ui/toast";
 import { useTransition } from "react";
 import { Button } from "@/components/ui/button";
+import StripePayment from "./stripe-payment";
 
 
 type Props ={
     order: Order,
     paypalClientId: string,
-    isAdmin: boolean
+    isAdmin: boolean,
+    stripeClientSecret: string | null
 }
 
-const OrderDetailaTable = ({order, paypalClientId, isAdmin}: Props) => {
+const OrderDetailaTable = ({order, paypalClientId, isAdmin, stripeClientSecret}: Props) => {
 
     const {
         id,
@@ -173,6 +175,9 @@ const OrderDetailaTable = ({order, paypalClientId, isAdmin}: Props) => {
                                 <div>Total</div>
                                 <div>{formatCurrency(totalPrice)}</div>
                             </div>
+                            {!isPaid && paymentMethod === 'Stripe' && stripeClientSecret && (
+                                <StripePayment priceInCents={Math.round(Number(totalPrice) * 100)} orderId={id} clientSecret={stripeClientSecret} />
+                            )}
                             {!isPaid && paymentMethod === 'PayPal' && (
                                 <>
                                     <PrintLoadingState />

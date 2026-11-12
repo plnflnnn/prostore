@@ -65,7 +65,7 @@ const AdminOrdersPageContent = async({searchParams}: Props) => {
                   <TableCell>{order.isDelivered && order.deliveredAt ? formatDateAndTime(order.deliveredAt).dateTime : 'No'}</TableCell>
                   <TableCell>
                     <Button variant="outline" size="sm">
-                      <Link href={`/orders/${order.id}`}>Details</Link>
+                      <Link href={`/order/${order.id}`}>Details</Link>
                     </Button>
                     <DeleteDialog id={order.id} action={deleteOrder} />
                   </TableCell>
