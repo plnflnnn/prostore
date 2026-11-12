@@ -15,6 +15,47 @@ import { revalidatePath } from "next/cache";
 import { PAGE_SIZE } from "../constants";
 import { sendPurchaseReceipt } from "@/lib/send-purchase-receipt";
 
+const orderWithItemsInclude = {
+    orderItems: {
+        include: {
+            product: { select: { slug: true } },
+        },
+    },
+    user: { select: { name: true, email: true } },
+} as const;
+
+function toOrder(data: {
+    shippingAddress: unknown;
+    paymentResult: unknown;
+    user: { name: string; email: string } | null;
+    orderItems: {
+        product: { slug: string };
+        productId: string;
+        name: string;
+        quantity: number;
+        image: string;
+        price: unknown;
+    }[];
+} & Record<string, unknown>): Order {
+    return convertToPlainObject<Order>({
+        ...data,
+        shippingAddress: data.shippingAddress as ShippingAddress,
+        paymentResult: data.paymentResult as PaymentResult,
+        user: {
+            name: data.user?.name ?? "",
+            email: data.user?.email ?? "",
+        },
+        orderItems: data.orderItems.map((item) => ({
+            slug: item.product.slug,
+            productId: item.productId,
+            name: item.name,
+            quantity: item.quantity,
+            image: item.image,
+            price: item.price,
+        })),
+    });
+}
+
 // Create an order and create the order items
 export async function createOrder() {
     try {
@@ -99,22 +140,12 @@ export async function getOrderById(orderId: string): Promise<Order | undefined> 
     await connection();
     const data = await prisma.order.findFirst({
         where: { id: orderId },
-        include: {
-            orderItems: true,
-            user: { select: { name: true, email: true }},
-        }
+        include: orderWithItemsInclude,
     });
 
     if (!data) return undefined;
 
-    return convertToPlainObject<Order>({
-        ...data,
-        shippingAddress: data.shippingAddress as ShippingAddress,
-        user: {
-            name: data.user?.name ?? "",
-            email: data.user?.email ?? "",
-        },
-    });
+    return toOrder(data);
 };
 
 //Create new paypal order
@@ -207,19 +238,12 @@ export async function updateOrderToPaid({orderId, paymentResult}: {orderId: stri
     //Get updated order
     const updatedOrder = await prisma.order.findFirst({
         where: { id: orderId },
-        include: {
-            orderItems: true,
-            user: { select: { name: true, email: true }},
-        },
+        include: orderWithItemsInclude,
     });
     if(!updatedOrder) throw new Error('Failed to update order');
 
     sendPurchaseReceipt({
-        order: {
-          ...updatedOrder,
-          shippingAddress: updatedOrder.shippingAddress as ShippingAddress,
-          paymentResult: updatedOrder.paymentResult as PaymentResult,
-        },
+        order: toOrder(updatedOrder),
     });
 }
 
